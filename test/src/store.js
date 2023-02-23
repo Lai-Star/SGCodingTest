@@ -1,32 +1,44 @@
-import {configureStore, createSlice, createStore} from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { getDraws, getLatestDraw } from "./utils/api";
 
-const initialState = {
-    kinoDraws: [],
-    isLoading: false,
-    error: null
-}
-
-const kinoSlice = createSlice({
-    name: 'kino',
-    initialState,
-    reducers: {
-        addKinoDraws(state, action) {
-            state.kinoDraws.push(...action.payload);
-        },
-        setIsLoading(state, action) {
-            state.isLoading = action.payload;
-        },
-        setError(state, action) {
-            state.error = action.payload;
-        }
-    }
+export const fetchDraws = createAsyncThunk("draws/fetchDraws", async () => {
+  const draws = await getLatestDraw();
+  return draws;
 });
 
-const store = configureStore({
-    reducer: {
-        kino: kinoSlice.reducer
-    },
-    middleware: []
+export const fetchMoreDraws = createAsyncThunk(
+  "draws/fetchMoreDraws",
+  async (params) => {
+    const { drawNumber, number, sort } = params;
+    const draws = await getDraws(drawNumber, number, sort);
+    return draws;
+  }
+);
+
+const drawsSlice = createSlice({
+  name: "draws",
+  initialState: { data: [], loading: false, hasMore: true },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchDraws.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchDraws.fulfilled, (state, action) => {
+        state.data = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchMoreDraws.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchMoreDraws.fulfilled, (state, action) => {
+        state.data = [...state.data, ...action.payload];
+        state.loading = false;
+        state.hasMore = action.payload.length > 0;
+      });
+  },
 });
 
-export default store;
+export const { setDraws } = drawsSlice.actions;
+
+export default drawsSlice.reducer;

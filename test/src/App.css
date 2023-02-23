@@ -36,3 +36,9 @@
     transform: rotate(360deg);
   }
 }
+
+.card:hover {
+  outline: 2px solid #007bff;
+  background-color: #f8f9fa;
+  cursor: pointer;
+}
