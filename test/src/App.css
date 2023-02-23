@@ -42,3 +42,34 @@
   background-color: #f8f9fa;
   cursor: pointer;
 }
+
+.draw-card {
+  width: calc(20% - 10px);
+  margin: 5px;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+
+.draw-card:hover {
+  transform: scale(1.05);
+}
+
+.draw-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  overflow-y: scroll;
+  height: calc(100vh - 120px);
+  padding: 10px;
+}
+
+.modal-image {
+  width: 100%;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}

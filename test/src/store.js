@@ -39,6 +39,4 @@ const drawsSlice = createSlice({
   },
 });
 
-export const { setDraws } = drawsSlice.actions;
-
 export default drawsSlice.reducer;
